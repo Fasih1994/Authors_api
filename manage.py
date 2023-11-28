@@ -2,11 +2,11 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from authors_api import settings
 
 
 def main():
     """Run administrative tasks."""
-
     # TODO: Change this in production
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "authors_api.settings.local")
     try:
