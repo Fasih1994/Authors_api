@@ -10,6 +10,9 @@ down:
 show-logs:
 	docker compose -f docker-compose.local.yml logs
 
+show-logs-continuos:
+	docker compose -f docker-compose.local.yml logs -f
+
 show-logs-api:
 	docker compose -f docker-compose.local.yml logs api
 
