@@ -40,7 +40,7 @@ class Profile(TimeStampedModel):
         default="Nairobi",
         blank=False,
         null=False)
-    prifile_photo = models.ImageField(
+    profile_photo = models.ImageField(
         verbose_name=_("profile photo"),
         default='/profile_defaul.png'
     )
@@ -62,4 +62,4 @@ class Profile(TimeStampedModel):
         self.followers.remove(profile)
 
     def check_following(self, profile):
-        return self.followers.filter(pkid=profile.pkid).exists
+        return self.followers.filter(pkid=profile.pkid).exists()
