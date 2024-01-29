@@ -64,7 +64,7 @@ class FollowerListView(APIView):
     def get(self, request, format=None):
         try:
             profile = Profile.objects.get(user__id=request.user.id)
-            follower_profiles = profile.following.all() # all the followin me
+            follower_profiles = profile.following.all() # all profiles following me
             serializer = FollowingSerializer(follower_profiles, many=True)
             formatted_response = {
                 'status_code': status.HTTP_200_OK,
@@ -80,7 +80,7 @@ class FollowingListView(APIView):
     def get(self, request, format=None):
         try:
             profile = Profile.objects.get(user__id=request.user.id)
-            following_profiles = profile.followers.all() # all followers I am following
+            following_profiles = profile.followers.all() # all profile I am following
             serializer = FollowingSerializer(following_profiles, many=True)
             formatted_response = {
                 'status_code': status.HTTP_200_OK,
