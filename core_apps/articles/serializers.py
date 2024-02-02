@@ -28,9 +28,13 @@ class ArticleSerializer(serializers.ModelSerializer):
     banner_image = serializers.SerializerMethodField()
     estimated_read_time = serializers.ReadOnlyField()
     tags = TagListField()
+    average_rating = serializers.ReadOnlyField()
     views = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField
     updated_at = serializers.SerializerMethodField
+
+    def get_average_rating(self, obj):
+        return obj.average_rating()
 
     def get_estimated_read_time(self, obj):
         return obj.estimated_read_time
@@ -77,4 +81,4 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'slug', 'tags',
                   'estimated_read_time',  'author_info',
                   'views', 'description', 'body', 'banner_image',
-                  'created_at', 'updated_at']
+                  'average_rating','created_at', 'updated_at']
