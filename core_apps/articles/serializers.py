@@ -2,9 +2,10 @@ from rest_framework import serializers
 
 from core_apps.articles.models import Article, ArticleView
 from core_apps.bookmarks.models import BookMark
+from core_apps.articles.models import Clap
 from core_apps.profiles.serializers import ProfileSerializer
 from core_apps.bookmarks.serializers import BookMarkSerializer
-from core_apps.articles.models import Clap
+from core_apps.responses.serializers import ResponseSerializer
 
 
 class TagListField(serializers.Field):
@@ -36,6 +37,8 @@ class ArticleSerializer(serializers.ModelSerializer):
     bookmarks_count = serializers.SerializerMethodField()
     claps = serializers.SerializerMethodField()
     claps_count = serializers.SerializerMethodField()
+    responses = ResponseSerializer(many=True, read_only=True)
+    response_count = serializers.IntegerField(source='responses.count', read_only=True)
     views = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField
     updated_at = serializers.SerializerMethodField
@@ -53,6 +56,9 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     def get_claps_count(self, obj):
         return Clap.objects.filter(article=obj).count()
+
+    def get_responses_count(self, obj):
+        return obj.responses.count()
 
     def get_average_rating(self, obj):
         return obj.average_rating()
@@ -103,7 +109,7 @@ class ArticleSerializer(serializers.ModelSerializer):
                   'estimated_read_time',  'author_info',
                   'views', 'description', 'body', 'banner_image',
                   'average_rating','bookmarks', 'bookmarks_count',
-                  'claps', 'claps_count',
+                  'claps', 'claps_count','responses','response_count',
                   'created_at', 'updated_at']
 
 
