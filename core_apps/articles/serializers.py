@@ -4,6 +4,8 @@ from core_apps.articles.models import Article, ArticleView
 from core_apps.bookmarks.models import BookMark
 from core_apps.profiles.serializers import ProfileSerializer
 from core_apps.bookmarks.serializers import BookMarkSerializer
+from core_apps.articles.models import Clap
+
 
 class TagListField(serializers.Field):
     def to_representation(self, value):
@@ -32,6 +34,8 @@ class ArticleSerializer(serializers.ModelSerializer):
     average_rating = serializers.ReadOnlyField()
     bookmarks = serializers.SerializerMethodField()
     bookmarks_count = serializers.SerializerMethodField()
+    claps = serializers.SerializerMethodField()
+    claps_count = serializers.SerializerMethodField()
     views = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField
     updated_at = serializers.SerializerMethodField
@@ -42,6 +46,13 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     def get_bookmarks_count(self, obj):
         return BookMark.objects.filter(article=obj).count()
+
+    def get_claps(self, obj):
+        claps = Clap.objects.filter(article=obj)
+        return ClapSerializer(claps, many=True).data
+
+    def get_claps_count(self, obj):
+        return Clap.objects.filter(article=obj).count()
 
     def get_average_rating(self, obj):
         return obj.average_rating()
@@ -92,4 +103,16 @@ class ArticleSerializer(serializers.ModelSerializer):
                   'estimated_read_time',  'author_info',
                   'views', 'description', 'body', 'banner_image',
                   'average_rating','bookmarks', 'bookmarks_count',
+                  'claps', 'claps_count',
                   'created_at', 'updated_at']
+
+
+class ClapSerializer(serializers.ModelSerializer):
+    article_title = serializers.CharField(source='article.title',
+                                          read_only=True)
+    user_first_name = serializers.CharField(source='user.first_name',
+                                          read_only=True)
+
+    class Meta:
+        model = Clap
+        fields = ['id', 'user_first_name', 'article_title']

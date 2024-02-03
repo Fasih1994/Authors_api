@@ -7,9 +7,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.core.files.storage import default_storage
 from django.contrib.auth import get_user_model
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.shortcuts import get_object_or_404
 
-from .models import Article, ArticleView
-from .serializers import ArticleSerializer
+from .models import Article, ArticleView, Clap
+from .serializers import ArticleSerializer, ClapSerializer
 from .filters import ArticleFilter
 from .pagination import ArticlePagination
 from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
@@ -71,3 +72,44 @@ class ArticleRetieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         message = f"{instance.title} is deleted successfully."
         return Response({"details": message},
                         status=status.HTTP_200_OK)
+
+
+class ClapArticleView(generics.CreateAPIView, generics.DestroyAPIView):
+    queryset = Clap.objects.all()
+    serializer_class = ClapSerializer
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        article_id = kwargs.get('article_id')
+        article = get_object_or_404(Article, id=article_id)
+
+        if Clap.objects.filter(user=user, article=article).exists():
+            return Response(
+                {
+                    "detail": "You have already claped this article"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        clap = Clap.objects.create(user=user, article=article)
+        clap.save()
+        return Response(
+                    {
+                        "detail": "Clap added to article"
+                    },
+                    status=status.HTTP_201_CREATED
+                )
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        article_id = kwargs.get('article_id')
+        article = get_object_or_404(Article, id=article_id)
+
+        clap = get_object_or_404(Clap, user=user, article=article)
+        clap.delete()
+        return Response(
+                    {
+                        "detail": "Clap removed from article"
+                    },
+                    status=status.HTTP_200_OK
+                )
