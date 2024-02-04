@@ -1,6 +1,18 @@
 version: '3.9'
 
 services:
+
+  es:
+    image: elasticsearch:7.17.9
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - authors-api
+
   api:
     build:
       context: .
@@ -17,6 +29,8 @@ services:
     depends_on:
       - postgres
       - mailhog
+      - redis
+      - es
     command: /start
     networks:
       - authors-api
@@ -26,7 +40,7 @@ services:
       context: .
       dockerfile: ./docker/local/postgres/Dockerfile
     volumes:
-      - local_postgres_data:/var/lib/postgres/data
+      - local_postgres_data:/var/lib/postgresql/data
       - local_postgres_data_backups:/backups
     ports:
       - 5432:5432
@@ -108,3 +122,4 @@ volumes:
   local_postgres_data:
   local_postgres_data_backups:
   flower_data:
+  es-data:

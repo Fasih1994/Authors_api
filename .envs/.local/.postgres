@@ -3,3 +3,4 @@ POSTGRES_PORT=5432
 POSTGRES_DB=authors-live
 POSTGRES_USER=fasihuddin
 POSTGRES_PASSWORD=fasihuddin1994
+DATABASE_URL=postgres://fasihuddin:fasihuddin1994@postgres:5432/authors-live
