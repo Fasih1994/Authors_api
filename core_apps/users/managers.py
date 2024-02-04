@@ -12,9 +12,7 @@ class CustomUserManager(BaseUserManager):
         except ValidationError:
             raise ValueError(_("You must provide a valid email address!"))
 
-    def create_user(self, first_name, last_name,
-                    email, password, **extra_fields):
-
+    def create_user(self, first_name, last_name, email, password, **extra_fields):
         if not first_name:
             raise ValueError(_("User must have Firstname"))
 
@@ -27,34 +25,30 @@ class CustomUserManager(BaseUserManager):
         else:
             raise ValueError(_("User must have email"))
 
-
-
-        user = self.model(first_name=first_name, last_name=last_name,
-                          email=email, **extra_fields)
+        user = self.model(
+            first_name=first_name, last_name=last_name, email=email, **extra_fields
+        )
         user.set_password(password)
 
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        extra_fields.setdefault("is_active", True)
 
         user.save(using=self._db)
         return user
 
-    def create_superuser(
-        self, first_name, last_name,
-        email, password, **extra_fields):
+    def create_superuser(self, first_name, last_name, email, password, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
 
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
-
-        if extra_fields.get('is_staff') is not True:
+        if extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True"))
 
-        if extra_fields.get('is_superuser') is not True:
+        if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True"))
 
-        if extra_fields.get('is_active') is not True:
+        if extra_fields.get("is_active") is not True:
             raise ValueError(_("Superuser must have is_active=True"))
 
         if not password:

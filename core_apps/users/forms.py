@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth import forms as admin_forms
 from django.contrib.auth import get_user_model
 
-
 User = get_user_model()
 
 
@@ -21,9 +20,9 @@ class UserCreationForm(admin_forms.UserCreationForm):
     }
 
     def clean_email(self):
-        email = self.cleaned_data['email']
+        email = self.cleaned_data["email"]
         try:
             User.objects.get(email=email)
         except User.DoesNotExist:
             return email
-        raise forms.ValidationError(self.error_messages['duplicate_email'])
+        raise forms.ValidationError(self.error_messages["duplicate_email"])

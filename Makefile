@@ -44,7 +44,6 @@ flake8:
 black-check:
 	docker compose -f docker-compose.local.yml exec api black --check --exclude=migrations .
 
-
 black-diff:
 	docker compose -f docker-compose.local.yml exec api black --diff --exclude=migrations .
 

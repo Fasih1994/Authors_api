@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from pathlib import Path
-import environ
 import os
 from datetime import timedelta
+from pathlib import Path
+
+import environ
 
 env = environ.Env()
 
@@ -32,7 +33,7 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.sites"
+    "django.contrib.sites",
 ]
 
 
@@ -106,9 +107,7 @@ WSGI_APPLICATION = "authors_api.wsgi.application"
 
 
 if os.environ.get("DATABASE_URL"):
-    DATABASES = {
-        "default": env.db("DATABASE_URL")
-    }
+    DATABASES = {"default": env.db("DATABASE_URL")}
 else:
     DATABASES = {
         "default": {
@@ -195,14 +194,13 @@ if USE_TZ:
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
-        ],
+    ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
-    ]
-
+    ],
 }
 
 SIMPLE_JWT = {
@@ -211,7 +209,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "SINGING_KEY": env("SINGING_KEY"),
-    "USER_ID_FIELD": 'id',
+    "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
 }
 
@@ -220,7 +218,7 @@ REST_AUTH = {
     "JWT_AUTH_COOKIE": "authors-access-token",
     "JWT_AUTH_REFRESH_COOKIE": "authors-refresh-token",
     "REGISTER_SERIALIZER": "core_apps.users.serializers.CustomRegisterSerialzer",
-    'OLD_PASSWORD_FIELD_ENABLED': True,
+    "OLD_PASSWORD_FIELD_ENABLED": True,
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -228,7 +226,7 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFIACTION = "mendatory"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
@@ -257,11 +255,8 @@ LOGGING = {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
-            "formatter": "verbose"
+            "formatter": "verbose",
         }
     },
-    "root": {
-        "level": "INFO",
-        'handlers': ['console']
-    }
+    "root": {"level": "INFO", "handlers": ["console"]},
 }

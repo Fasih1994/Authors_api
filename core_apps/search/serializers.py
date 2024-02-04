@@ -5,7 +5,14 @@ from .documents import ArticleDocument
 
 class ArticleElasticSearchSerializer(DocumentSerializer):
     class Meta:
-        document=ArticleDocument
-        fields=['id', 'author', 'title', 'slug','tags',
-                'estimated_time'
-                'description', 'body', 'created_at']
+        document = ArticleDocument
+        fields = [
+            "id",
+            "author",
+            "title",
+            "slug",
+            "tags",
+            "estimated_time" "description",
+            "body",
+            "created_at",
+        ]

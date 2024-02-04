@@ -6,24 +6,20 @@ from core_apps.articles.models import Article
 
 @registry.register_document
 class ArticleDocument(Document):
-    title = fields.TextField(attr='title')
-    description = fields.TextField(attr='description')
-    body = fields.TextField(attr='body')
+    title = fields.TextField(attr="title")
+    description = fields.TextField(attr="description")
+    body = fields.TextField(attr="body")
     author_first_name = fields.TextField()
     author_last_name = fields.TextField()
     tags = fields.KeywordField()
 
-
     class Index:
-        name = 'articles'
-        settings = {
-            "number_of_shards":1,
-            "number_of_replicas":0
-        }
+        name = "articles"
+        settings = {"number_of_shards": 1, "number_of_replicas": 0}
 
     class Django:
-        model=Article
-        fields = ['created_at']
+        model = Article
+        fields = ["created_at"]
 
     def prepare_author_first_name(self, instance):
         return instance.author.first_name

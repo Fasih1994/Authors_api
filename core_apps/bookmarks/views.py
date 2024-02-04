@@ -1,16 +1,16 @@
-from uuid import UUID
 import logging
-from rest_framework import generics, permissions, status
+from uuid import UUID
+
 from django.db import IntegrityError
-from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework import generics, permissions, status
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 
-
 from core_apps.articles.models import Article
+
+from .exceptions import AlreadyBookmarkedArticle
 from .models import BookMark
 from .serializers import BookMarkSerializer
-from .exceptions import AlreadyBookmarkedArticle
-
 
 logger = logging.getLogger(__name__)
 
@@ -21,12 +21,12 @@ class BookMarkCreateAPIView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        article_id = self.kwargs.get('article_id')
+        article_id = self.kwargs.get("article_id")
         if article_id:
             try:
                 article = Article.objects.get(id=article_id)
             except Article.DoesNotExist:
-                raise ValidationError('Invalid article_id provided.')
+                raise ValidationError("Invalid article_id provided.")
         else:
             raise ValidationError("article_id is required.")
 
@@ -38,12 +38,12 @@ class BookMarkCreateAPIView(generics.CreateAPIView):
 
 class BookMarkDestroyView(generics.DestroyAPIView):
     queryset = BookMark.objects.all()
-    lookup_field = 'article_id'
+    lookup_field = "article_id"
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         user = self.request.user
-        article_id = self.kwargs.get('article_id')
+        article_id = self.kwargs.get("article_id")
 
         try:
             UUID(article_id.hex, version=4)
@@ -51,11 +51,10 @@ class BookMarkDestroyView(generics.DestroyAPIView):
             raise ValidationError("Invalid article_id provided")
 
         try:
-            bookmark = BookMark.objects.get(user=user,
-                                            article__id=article_id)
+            bookmark = BookMark.objects.get(user=user, article__id=article_id)
 
         except BookMark.DoesNotExist:
-            raise NotFound('Bookmark is not found or is not belong to you.')
+            raise NotFound("Bookmark is not found or is not belong to you.")
 
         return bookmark
 
