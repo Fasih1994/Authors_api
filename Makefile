@@ -58,3 +58,12 @@ isort-diff:
 
 isort:
 	docker compose -f docker-compose.local.yml exec api isort . --skip venv --skip migrations
+
+rebuild-index:
+	docker compose -f docker-compose.local.yml exec api python manage.py search_index --rebuild
+
+run-test-console-cov:
+	docker compose -f docker-compose.local.yml run --rm api pytest -p no:warnings --cov=. -v
+
+run-test-web-cov:
+	docker compose -f docker-compose.local.yml run --rm api pytest -p no:warnings --cov=. --cov-report html
