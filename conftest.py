@@ -1,11 +1,10 @@
 import pytest
-from pytest_factoryboy import register
-from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.middleware import AuthenticationMiddleware
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory
+from pytest_factoryboy import register
 
 from core_apps.users.tests.factories import UserFactory
-
 
 register(UserFactory)
 
@@ -18,17 +17,14 @@ def normal_user(db, user_factory):
 
 @pytest.fixture
 def super_user(db, user_factory):
-    new_user = user_factory.create(
-        is_superuser=True,
-        is_staff=True
-        )
+    new_user = user_factory.create(is_superuser=True, is_staff=True)
     return new_user
 
 
 @pytest.fixture
 def mock_request():
     factory = RequestFactory()
-    request = factory.get('/')
+    request = factory.get("/")
     middileware = SessionMiddleware(lambda req: None)
     middileware.process_request(request)
     request.session.save()
